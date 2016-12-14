@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <jpa:repositories base-package="sg.com.cic.cicportal.data.repository"/>
+    <tx:annotation-driven/>
+    <context:annotation-config/>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="sg.com.cic.cicportal.data.entity"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="showSql" value="${cicportal.db.jpa.showSql}"/>
+            </bean>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.default_schema">${cicportal.db.schema}</prop>
+                <prop key="hibernate.connection.release_mode">on_close</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${cicportal.db.jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${cicportal.db.jdbc.url}"/>
+        <property name="user" value="${cicportal.db.jdbc.username}"/>
+        <property name="password" value="${cicportal.db.jdbc.password}"/>
+
+        <!-- these are C3P0 properties -->
+        <property name="acquireIncrement" value="${cicportal.db.c3p0.acquireIncrement}"/>
+        <property name="minPoolSize" value="${cicportal.db.c3p0.minPoolSize}"/>
+        <property name="maxPoolSize" value="${cicportal.db.c3p0.maxPoolSize}"/>
+        <property name="maxIdleTime" value="${cicportal.db.c3p0.maxIdleTime}"/>
+    </bean>
+
+    <!-- Add Transaction support -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+</beans>

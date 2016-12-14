@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <description>This file is just the definition of profile beans</description>
+
+    <beans profile="dev">
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath*:dbconfig/cicportal-dev.properties</value>
+                </list>
+            </property>
+        </bean>
+    </beans>
+
+    <beans profile="live">
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath*:dbconfig/cicportal-live.properties</value>
+                </list>
+            </property>
+        </bean>
+    </beans>
+
+</beans>
+
